@@ -1,8 +1,8 @@
-#! usr/bin/env python3
-# -*- coding:utf-8 -*-
+#priceSequence 为某一股票交易日内开始后的日内成交价格序列
 
-data_close = {'1.13':7.31, '1.14':7.28, '1.15':7.40, '1.16':7.43, '1.17':7.41}
-data_close['1.20'] = 7.44
-data_close['1.16'] = 7.50
+#求开盘价
+#将股票日内交易第一笔成交的成交价格定义为“开盘价”
+def OpenPrice(priceSequence):
+    open = priceSequence[0]
+    return open
 
-print(data_close)
