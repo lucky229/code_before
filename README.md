@@ -1,2 +1,0 @@
-# case
-Study practice case
