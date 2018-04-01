@@ -1,15 +1,21 @@
-#! usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import random
+from multiprocessing import Pool
+import os, time, random
 
-blue = []
-num = 5
+class abd():
+    def a(self, num):
+        print('Task %s (%s) running...' % (num, os.getpid()))
+        #start = time.time()
+        time.sleep(random.random()*3)
 
-while len(blue) < num+1:
-    a = random.randint(1,36)
-    if a not in blue:
-        blue.append(a)
+        print("Task %s ends." % num)
 
-print('Blue is :', sorted(blue))
-print('Red is :', random.randint(1,16))
+if __name__ == '__main__':
+    print()
+    p = Pool(6)
+    for i in range(30):
+        p.apply_async(abd().a, args=(i, ))
+    p.close()
+    p.join()
+    print('Done')

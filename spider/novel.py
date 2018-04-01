@@ -11,7 +11,8 @@ date:2018.3.30
 """
 
 from urllib.request import urlopen
-import requests, sys
+from multiprocessing import Pool
+import requests, time
 from bs4 import BeautifulSoup
 import chardet
 
@@ -25,9 +26,9 @@ class downloader(object):
         self.server = 'http://www.booktxt.net/'                      #小说网站
         self.target = 'http://www.booktxt.net/2_2219/'              #小说目录
         self.charset = ''                                                #网站编码
-        self.name = []                                                    #章节名称
-        self.urls = []                                                    #章节链接
-        self.nums = 0                                                     #章节数
+        self.name = []                                                   #章节名称
+        self.urls = []                                                   #章节链接
+        self.nums = 0                                                    #章节数
 
     def get_charset(self):
         """利用chardet 获取网站编码 chaeset """
@@ -74,21 +75,27 @@ class downloader(object):
 
     def writer(self, content):
         """写入文件"""
-        with open('H://code//spider//圣墟.txt', 'a', encoding='utf-8') as f:
+        with open('F://code//spider//圣墟.txt', 'a', encoding='utf-8') as f:
             f.write(content)
 
 if __name__ == '__main__':
     dl = downloader()
     dl.get_charset()
     urls = dl.get_urls()
-    #print(type(urls))
-    #print(urls)
+    p = Pool(4)
     print('开始下载《圣墟》：')
+    start = time.time()
     for i in range(dl.nums):
-        print(dl.name[i])
-        dl.writer(dl.name[i])
-        dl.writer('\n')
-        dl.writer(dl.get_content(dl.urls[i]))
+        content = dl.name[i] + '\n' + dl.get_content(dl.urls[i] + '\n')
+        p.apply_async(func=downloader().writer, args=(content, ))
+        #dl.writer(dl.name[i])
+        #dl.writer('\n')
+        #dl.writer(dl.get_content(dl.urls[i]))
+
+    p.close()
+    p.join()
     print('《圣墟》下载完成。')
+    end = time.time()
+    print('Spend time %s secends' % (end-start))
     #print(dl.get_urls())
     #print(len(dl.get_urls()))
